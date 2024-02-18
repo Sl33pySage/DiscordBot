@@ -1,12 +1,18 @@
 require("dotenv").config();
-const { Client, GatewayIntentBits, Events } = require("discord.js");
+const { Client, GatewayIntentBits, Events, Collection } = require("discord.js");
+
+const pingCommand = require("./commands/ping");
+
+const { clientReadyHandler } = require("./events/clientReady");
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds],
 });
 
-client.on(Events.ClientReady, () => {
-	console.log("Logged in!");
-});
+client.commands = new Collection();
+
+client.commands.set(pingCommand.data.name, pingCommand);
+
+client.on(Events.ClientReady, clientReadyHandler);
 
 client.login();
